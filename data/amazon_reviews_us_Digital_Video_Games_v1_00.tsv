@@ -1,0 +1,26 @@
+marketplace	customer_id	review_id	product_id	product_parent	product_title	product_category	star_rating	helpful_votes	total_votes	vine	verified_purchase	review_headline	review_body	review_date
+US	10012345	R1WFOQ3N9BO65I	B00F4CEHNK	341969535	Xbox Live Gift Card	Digital_Video_Games	5.0	15	16	N	Y	Five Stars	Awesome instant delivery code for digital gaming.	2026-01-15
+US	21925455	R2GVSDHW513SS1	B002LIT9EC	695277014	Civilization VI Digital Deluxe	Digital_Video_Games	5.0	42	45	N	Y	Strategic Masterpiece	One of the best strategy games ever made. Addictive gameplay.	2026-01-18
+US	31525534	R3V3NJLZM0E552	B004RMK4BC	384246568	Playstation Network Card	Digital_Video_Games	5.0	35	38	N	Y	Instant PSN Code	Seamless wallet top-up, code worked instantly in minutes.	2026-01-20
+US	45331959	RUHZQA7YBH6NM	B001KC01WO	955209542	Grand Theft Auto V Online	Digital_Video_Games	5.0	28	30	N	Y	Endless Fun	Massive open world with regular updates and vibrant community.	2026-01-22
+US	21925455	R44QKV6FE5CJ2	B004RMK4BC	384246568	Playstation Network Card	Digital_Video_Games	4.0	12	14	N	Y	Reliable Top-Up	Works as expected, prompt delivery on screen.	2026-01-25
+US	49511256	R55BKL8FE3DX1	B00F4CEHNK	341969535	Xbox Live Gift Card	Digital_Video_Games	5.0	18	19	N	Y	Great Value	Easy purchase for holiday gifts and subscription renewals.	2026-02-01
+US	6057518	R66CNM9GE2HY4	B001KC01WO	955209542	Grand Theft Auto V Online	Digital_Video_Games	4.0	22	25	N	Y	Great Game High Spec	Needs solid GPU but well worth the download.	2026-02-03
+US	21925455	R77DPQ0HE1KA5	B002LIT9EC	695277014	Civilization VI Digital Deluxe	Digital_Video_Games	5.0	30	32	N	Y	Countless Hours	Great expansions included in the deluxe bundle.	2026-02-05
+US	10012345	R88ERS1IE0LB6	B008139R8A	402222185	FIFA 24 Ultimate Edition	Digital_Video_Games	3.0	14	20	N	Y	Decent but repetitive	Familiar mechanics, microtransactions are aggressive.	2026-02-08
+US	72345678	R99FTT2JE9MC7	B008139R8A	402222185	FIFA 24 Ultimate Edition	Digital_Video_Games	2.0	40	44	N	Y	Pay to Win Economy	Online servers disconnect frequently during competitive matches.	2026-02-10
+US	21925455	R10GUU3KE8ND8	B008139R8A	402222185	FIFA 24 Ultimate Edition	Digital_Video_Games	2.0	25	30	N	N	Frustrating Bugs	Roster updates do not justify full retail price tag.	2026-02-12
+US	83456789	R11HVV4LE7OE9	B009140S9B	232803743	Cyber Warrior RPG	Digital_Video_Games	1.0	55	60	N	Y	Unplayable Stutter	Constant crashes on launch, game corrupts saved files.	2026-02-14
+US	94567890	R12IWW5ME6PF0	B009140S9B	232803743	Cyber Warrior RPG	Digital_Video_Games	1.0	38	40	N	Y	Terrible Optimization	Refund requested immediately, do not waste money.	2026-02-16
+US	10012345	R13JXX6NE5QG1	B009140S9B	232803743	Cyber Warrior RPG	Digital_Video_Games	2.0	20	24	N	N	Broken Release	Graphic glitches make early missions impossible to finish.	2026-02-18
+US	11223344	R14KYY7OE4RH2	B003LIT9FC	395682204	Minecraft Java & Bedrock	Digital_Video_Games	5.0	65	68	N	Y	Timeless Classic	Creative freedom for all ages, fantastic multiplayer support.	2026-02-20
+US	22334455	R15LZZ8PE3SI3	B003LIT9FC	395682204	Minecraft Java & Bedrock	Digital_Video_Games	5.0	48	50	N	Y	Must Have Game	Smooth installation via Microsoft store, highly recommended.	2026-02-22
+US	21925455	R16MAA9QE2TJ4	B003LIT9FC	395682204	Minecraft Java & Bedrock	Digital_Video_Games	5.0	33	35	N	Y	Endless Fun	Modding scene keeps this game fresh for years.	2026-02-25
+US	33445566	R17NBB0RE1UK5	B004RMK4BC	384246568	Playstation Network Card	Digital_Video_Games	5.0	19	20	N	Y	Quick Delivery	Emailed code worked instantly on PS5 console.	2026-02-27
+US	44556677	R18OCC1SE0VL6	B002LIT9EC	695277014	Civilization VI Digital Deluxe	Digital_Video_Games	4.0	16	18	N	Y	Superb Turn Based Fun	One more turn syndrome is very real with this title.	2026-03-01
+US	55667788	R19PDD2TE9WM7	B00F4CEHNK	341969535	Xbox Live Gift Card	Digital_Video_Games	5.0	27	28	N	Y	Instant Code	Zero issues redeeming on Xbox Series X console.	2026-03-03
+US	21925455	R20QEE3UE8XN8	B00F4CEHNK	341969535	Xbox Live Gift Card	Digital_Video_Games	4.0	10	11	N	Y	Good Discount	Great promotion bundle, code received in email immediately.	2026-03-05
+US	66778899	R21RFF4VE7YO9	B004RMK4BC	384246568	Playstation Network Card	Digital_Video_Games	5.0	24	25	N	Y	Five Stars	Perfect digital code for PlayStation store purchases.	2026-03-07
+US	77889900	R22SGG5WE6ZP0	B001KC01WO	955209542	Grand Theft Auto V Online	Digital_Video_Games	5.0	31	33	N	Y	Top Tier Action	Heists with friends are some of the best gaming experiences.	2026-03-09
+US	88990011	R23THH6XE5AQ1	B008139R8A	402222185	FIFA 24 Ultimate Edition	Digital_Video_Games	3.0	15	18	N	Y	Mediocre Upgrade	Gameplay feels slightly sluggish compared to previous edition.	2026-03-11
+US	21925455	R24UII7YE4BR2	B009140S9B	232803743	Cyber Warrior RPG	Digital_Video_Games	1.0	42	45	N	Y	Waste of Money	Terrible framerate drops even on high-end hardware.	2026-03-13

@@ -1,0 +1,11 @@
+# Python
+__pycache__/
+*.pyc
+
+# Hadoop / Pig logs
+*.log
+.pigbootup
+pig_*.log
+
+# Temp files
+*.tmp

@@ -1,0 +1,7 @@
+B001KC01WO	Moving Averages: 5.0, 4.5, 4.67
+B002LIT9EC	Moving Averages: 5.0, 5.0, 4.67
+B003LIT9FC	Moving Averages: 5.0, 5.0, 5.0
+B004RMK4BC	Moving Averages: 5.0, 4.5, 4.67, 4.75
+B008139R8A	Moving Averages: 3.0, 2.5, 2.33, 2.5
+B009140S9B	Moving Averages: 1.0, 1.0, 1.33, 1.25
+B00F4CEHNK	Moving Averages: 5.0, 5.0, 5.0, 4.75

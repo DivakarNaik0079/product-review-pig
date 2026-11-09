@@ -1,0 +1,7 @@
+B001KC01WO	MaxRate: 5.0	HelpfulVotes: 81	TotalVotes: 88
+B002LIT9EC	MaxRate: 5.0	HelpfulVotes: 88	TotalVotes: 95
+B003LIT9FC	MaxRate: 5.0	HelpfulVotes: 146	TotalVotes: 153
+B004RMK4BC	MaxRate: 5.0	HelpfulVotes: 90	TotalVotes: 97
+B008139R8A	MaxRate: 3.0	HelpfulVotes: 94	TotalVotes: 112
+B009140S9B	MaxRate: 2.0	HelpfulVotes: 155	TotalVotes: 169
+B00F4CEHNK	MaxRate: 5.0	HelpfulVotes: 70	TotalVotes: 74
