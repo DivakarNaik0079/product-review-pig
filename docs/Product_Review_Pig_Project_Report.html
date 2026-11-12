@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Project Report - Product Review Data Processing Using Apache Pig & Hadoop MapReduce</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 16mm 16mm 16mm 16mm;
+      @bottom-center {
+        content: "Page " counter(page) " of " counter(pages);
+        font-family: 'Segoe UI', Arial, sans-serif;
+        font-size: 9pt;
+        color: #64748b;
+      }
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Calibri, Arial, sans-serif;
+      color: #1e293b;
+      line-height: 1.48;
+      font-size: 10pt;
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+    }
+    .page-break {
+      page-break-before: always;
+    }
+    /* Cover Page */
+    .cover-page {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 250mm;
+      text-align: center;
+      border: 2px solid #1e3a8a;
+      padding: 28px;
+      border-radius: 6px;
+    }
+    .cover-badge {
+      display: inline-block;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      padding: 6px 16px;
+      font-weight: 700;
+      font-size: 9.5pt;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-radius: 20px;
+      margin-bottom: 18px;
+    }
+    .cover-title {
+      font-size: 24pt;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.25;
+      margin: 10px 0 14px 0;
+    }
+    .cover-subtitle {
+      font-size: 13pt;
+      font-weight: 500;
+      color: #475569;
+      margin-bottom: 28px;
+    }
+    .cover-divider {
+      width: 90px;
+      height: 4px;
+      background: #ea580c;
+      margin: 0 auto 28px auto;
+      border-radius: 2px;
+    }
+    .cover-box {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 18px 24px;
+      text-align: left;
+      margin: 20px auto;
+      width: 88%;
+    }
+    .cover-box table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0;
+    }
+    .cover-box td {
+      padding: 6px 8px;
+      border: none;
+      font-size: 10pt;
+      vertical-align: top;
+    }
+    .cover-box td.label {
+      font-weight: 700;
+      color: #334155;
+      width: 34%;
+    }
+    .cover-footer {
+      font-size: 10pt;
+      color: #475569;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 14px;
+    }
+    /* Headings */
+    h1 {
+      font-size: 15pt;
+      color: #0f172a;
+      border-bottom: 2px solid #ea580c;
+      padding-bottom: 4px;
+      margin-top: 14px;
+      margin-bottom: 9px;
+      page-break-after: avoid;
+    }
+    h2 {
+      font-size: 11.5pt;
+      color: #1e3a8a;
+      margin-top: 11px;
+      margin-bottom: 6px;
+      page-break-after: avoid;
+    }
+    h3 {
+      font-size: 10.5pt;
+      color: #334155;
+      margin-top: 9px;
+      margin-bottom: 4px;
+      page-break-after: avoid;
+    }
+    p {
+      margin: 0 0 7px 0;
+      text-align: justify;
+    }
+    ul, ol {
+      margin: 0 0 8px 0;
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 2.5px;
+    }
+    /* Tables */
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 8px 0 12px 0;
+      font-size: 9pt;
+      page-break-inside: avoid;
+    }
+    table.data-table th {
+      background: #1e293b;
+      color: #ffffff;
+      font-weight: 600;
+      text-align: left;
+      padding: 5px 8px;
+      border: 1px solid #1e293b;
+    }
+    table.data-table td {
+      padding: 4.5px 8px;
+      border: 1px solid #cbd5e1;
+      vertical-align: top;
+    }
+    table.data-table tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+    /* Code Blocks */
+    pre {
+      background: #f1f5f9;
+      border-left: 4px solid #ea580c;
+      border-top: 1px solid #e2e8f0;
+      border-right: 1px solid #e2e8f0;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 8px 10px;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 8.3pt;
+      line-height: 1.4;
+      overflow-x: hidden;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 8px 0 10px 0;
+      border-radius: 0 4px 4px 0;
+      page-break-inside: avoid;
+    }
+    code {
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 9pt;
+      background: #f1f5f9;
+      padding: 1px 4px;
+      border-radius: 3px;
+      color: #b45309;
+    }
+    .callout {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-left: 4px solid #ea580c;
+      padding: 10px 14px;
+      margin: 12px 0;
+      border-radius: 4px;
+      font-size: 9.5pt;
+      page-break-inside: avoid;
+    }
+    .callout-alert {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-left: 4px solid #dc2626;
+      padding: 10px 14px;
+      margin: 12px 0;
+      border-radius: 4px;
+      font-size: 9.5pt;
+      page-break-inside: avoid;
+    }
+    .sig-grid {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 42px;
+      padding-top: 10px;
+    }
+    .sig-box {
+      width: 42%;
+      border-top: 1px solid #334155;
+      padding-top: 6px;
+      text-align: center;
+      font-size: 9.5pt;
+      font-weight: 600;
+    }
+    .toc-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    .toc-table td {
+      padding: 4px 4px;
+      border-bottom: 1px dotted #cbd5e1;
+      font-size: 9.5pt;
+    }
+    .toc-table td.sec {
+      font-weight: 600;
+      color: #0f172a;
+    }
+    .toc-table td.ch {
+      width: 15%;
+      color: #ea580c;
+      font-weight: 700;
+    }
+    .diagram-box {
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 8px;
+      background: #ffffff;
+      text-align: center;
+      margin: 8px 0;
+      page-break-inside: avoid;
+    }
+    .kpi-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin: 8px 0;
+      page-break-inside: avoid;
+    }
+    .kpi-card {
+      flex: 1;
+      border: 1px solid #cbd5e1;
+      border-top: 3px solid #1e3a8a;
+      background: #f8fafc;
+      padding: 7px;
+      border-radius: 4px;
+      text-align: center;
+    }
+    .kpi-val {
+      font-size: 14pt;
+      font-weight: 800;
+      color: #0f172a;
+    }
+    .kpi-lbl {
+      font-size: 8pt;
+      color: #475569;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ==================== COVER PAGE ==================== -->
+<div class="cover-page">
+  <div>
+    <div class="cover-badge">Big Data Analytics Mini Project Report</div>
+    <h1 class="cover-title" style="border:none; text-align:center; margin-top:20px;">
+      Product Review Data Processing Using Apache Pig &amp; Hadoop MapReduce
+    </h1>
+    <div class="cover-subtitle">
+      Scalable Sentiment, Franchise Ranking, Moving Average, and Quality Defect Analysis on Amazon US Customer Reviews
+    </div>
+    <div class="cover-divider"></div>
+  </div>
+
+  <!-- Cover SVG Emblem -->
+  <div style="margin: 10px auto;">
+    <svg width="260" height="110" viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="18" width="70" height="70" rx="10" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+      <text x="45" y="48" font-family="Segoe UI, Arial" font-size="11" font-weight="bold" fill="#9a3412" text-anchor="middle">TSV</text>
+      <text x="45" y="65" font-family="Segoe UI, Arial" font-size="9" fill="#c2410c" text-anchor="middle">15 Columns</text>
+      <path d="M 85 53 L 105 53" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+      <rect x="108" y="18" width="70" height="70" rx="10" fill="#eff6ff" stroke="#1d4ed8" stroke-width="2"/>
+      <text x="143" y="46" font-family="Segoe UI, Arial" font-size="10.5" font-weight="bold" fill="#1e3a8a" text-anchor="middle">Pig &amp; MR</text>
+      <text x="143" y="63" font-family="Segoe UI, Arial" font-size="8.5" fill="#1d4ed8" text-anchor="middle">7 + 3 Jobs</text>
+      <path d="M 183 53 L 203 53" stroke="#64748b" stroke-width="2"/>
+      <rect x="206" y="18" width="44" height="70" rx="10" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+      <text x="228" y="48" font-family="Segoe UI, Arial" font-size="9.5" font-weight="bold" fill="#065f46" text-anchor="middle">KPIs</text>
+      <text x="228" y="64" font-family="Segoe UI, Arial" font-size="8" fill="#047857" text-anchor="middle">Web UI</text>
+    </svg>
+  </div>
+
+  <div class="cover-box">
+    <table>
+      <tr>
+        <td class="label">Submitted By:</td>
+        <td><strong>Divakar Naik</strong></td>
+      </tr>
+      <tr>
+        <td class="label">Project Title:</td>
+        <td>Product Review Data Processing Using Apache Pig &amp; Hadoop MapReduce</td>
+      </tr>
+      <tr>
+        <td class="label">Technology Stack:</td>
+        <td>Apache Pig (Pig Latin), Hadoop MapReduce (Java), HDFS, Python, Chart.js</td>
+      </tr>
+      <tr>
+        <td class="label">GitHub Repository:</td>
+        <td><code>https://github.com/DivakarNaik0079/product-review-pig</code></td>
+      </tr>
+      <tr>
+        <td class="label">Live Web Demo:</td>
+        <td><code>https://divakarnaik0079.github.io/product-review-pig/</code></td>
+      </tr>
+      <tr>
+        <td class="label">Submission Date:</td>
+        <td>November 2026</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="cover-footer">
+    Department of Computer Science &amp; Engineering / Big Data Analytics<br>
+    <em>Verified Working Pipeline, Experimental Outputs, and Interactive Web Deployment</em>
+  </div>
+</div>
+
+<!-- ==================== PAGE 2: DECLARATION, CERTIFICATE & ABSTRACT ==================== -->
+<div class="page-break">
+  <h1>Candidate Declaration</h1>
+  <p>
+    I hereby declare that the mini-project entitled <strong>"Product Review Data Processing Using Apache Pig &amp; Hadoop MapReduce"</strong> submitted in partial fulfillment of the academic requirements is a bonafide record of independent technical work carried out by me. All Pig Latin scripts, Java MapReduce programs, Python execution runners, analytical outputs, and the web visualization dashboard documented in this report have been implemented and verified.
+  </p>
+  <div class="sig-grid">
+    <div class="sig-box">Signature of Candidate<br><span style="font-weight:400; color:#475569;">Divakar Naik</span></div>
+    <div class="sig-box">Date<br><span style="font-weight:400; color:#475569;">November 2026</span></div>
+  </div>
+
+  <h1 style="margin-top:30px;">Certificate of Approval</h1>
+  <p>
+    This is to certify that the mini-project report entitled <strong>"Product Review Data Processing Using Apache Pig &amp; Hadoop MapReduce"</strong> carried out by <strong>Divakar Naik</strong> has been evaluated and approved as a satisfactory demonstration of distributed Big Data processing using Apache Hadoop, Pig Latin, and MapReduce design patterns.
+  </p>
+  <div class="sig-grid">
+    <div class="sig-box">Internal Guide / Faculty Evaluator</div>
+    <div class="sig-box">Head of Department / External Examiner</div>
+  </div>
+
+  <h1 style="margin-top:34px;">Abstract</h1>
+  <p>
+    Modern e-commerce platforms generate millions of customer product reviews containing structured ratings, categorical metadata, vote counts, and unstructured text feedback. Processing and extracting business intelligence from such semi-structured datasets using traditional single-node relational databases becomes prohibitively slow and unscalable as volume grows toward terabytes.
+  </p>
+  <p>
+    This project implements a hybrid Big Data batch-processing architecture combining <strong>Apache Pig (Pig Latin)</strong> and custom <strong>Hadoop MapReduce (Java)</strong> programs. Operating on the official 15-column Amazon US Customer Reviews TSV schema, the Pig pipeline performs automated data hygiene, product franchise (<code>product_parent</code>) aggregation, top-N leaderboards using Pig's built-in <code>TOP()</code> UDF, review helpfulness ratio computation, and automated quality-control alerts for underperforming products (average star rating &le; 2.5). Simultaneously, three Java MapReduce jobs compute per-ASIN engagement statistics (<code>GameStats</code>), chronological moving rating averages (<code>MovingAverage</code>), and the most prolific reviewer using an In-Reducer <code>cleanup()</code> state-tracking pattern (<code>TopReviewer</code>).
+  </p>
+  <p>
+    To guarantee portability across environments without local Hadoop daemons, standalone Python execution runners (<code>pig_runner.py</code> and <code>mapreduce_runner.py</code>) reproduce exact Hadoop <code>part-r-00000</code> outputs, paired with a serverless interactive web dashboard deployed on GitHub Pages.
+  </p>
+</div>
+
+<!-- ==================== PAGE 3: TABLE OF CONTENTS & CHAPTER 1 ==================== -->
+<div class="page-break">
+  <h1>Table of Contents</h1>
+  <table class="toc-table">
+    <tr><td class="ch">Chapter 1</td><td class="sec">Introduction, Problem Statement &amp; Project Objectives</td></tr>
+    <tr><td class="ch">Chapter 2</td><td class="sec">Literature Survey &amp; Big Data Framework Comparison</td></tr>
+    <tr><td class="ch">Chapter 3</td><td class="sec">System Architecture &amp; Dataflow Pipeline</td></tr>
+    <tr><td class="ch">Chapter 4</td><td class="sec">Hardware, Software &amp; 15-Column Dataset Specification</td></tr>
+    <tr><td class="ch">Chapter 5</td><td class="sec">Implementation: Apache Pig Latin Scripts (Tasks 1–7)</td></tr>
+    <tr><td class="ch">Chapter 6</td><td class="sec">Implementation: Hadoop Java MapReduce Jobs (3 Design Patterns)</td></tr>
+    <tr><td class="ch">Chapter 7</td><td class="sec">Verified Experimental Results, Visual Analytics &amp; Insights</td></tr>
+    <tr><td class="ch">Chapter 8</td><td class="sec">Execution Guide, Cross-Platform Portability &amp; Web Deployment</td></tr>
+    <tr><td class="ch">Chapter 9</td><td class="sec">Conclusion, Future Enhancements &amp; References</td></tr>
+  </table>
+
+  <h1>1. Introduction &amp; Problem Statement</h1>
+  <h2>1.1 Background</h2>
+  <p>
+    Customer reviews represent one of the richest sources of product feedback in online retail. Every review captures quantitative signals (star rating, helpful votes, total votes, verified purchase flag) alongside qualitative insights (headline and review body). Analyzing these logs enables merchants and product engineering teams to surface top-performing product lines, track rating degradation after product updates, and detect defective items early.
+  </p>
+
+  <h2>1.2 Problem Statement</h2>
+  <p>
+    Raw e-commerce review dumps present several Big Data challenges across the 5 V's:
+  </p>
+  <ul>
+    <li><strong>Volume &amp; Scalability:</strong> Full Amazon review datasets span tens of gigabytes across millions of rows, exceeding single-node memory limits.</li>
+    <li><strong>Veracity &amp; Noise:</strong> Raw TSV dumps contain header lines, null star ratings, unverified reviews, and zero-vote records that cause arithmetic division errors if unhandled.</li>
+    <li><strong>Variant Fragmentation:</strong> Individual product SKUs (<code>product_id</code> / ASIN) fragment reviews across editions (e.g., Standard vs. Deluxe), requiring aggregation at the franchise level (<code>product_parent</code>).</li>
+    <li><strong>Development Overhead:</strong> Writing raw Java MapReduce for every filtering, grouping, and sorting task creates excessive boilerplate code.</li>
+  </ul>
+
+  <h2>1.3 Objectives</h2>
+  <ol>
+    <li>Ingest and sanitize 15-column Amazon review TSV logs in Apache Pig using schema-on-read.</li>
+    <li>Compute top-5 product franchises by review volume and top-10 franchises by average star rating using Pig's <code>TOP()</code> UDF and <code>FLATTEN()</code>.</li>
+    <li>Identify high-impact reviews using <code>helpful_votes</code> and a guarded Helpfulness Ratio metric (<code>helpful_votes / total_votes &ge; 0.85</code>).</li>
+    <li>Automatically isolate underperforming/defective products (average rating &le; 2.5) for quality audit.</li>
+    <li>Implement Java MapReduce jobs for max-rating aggregation (<code>GameStats</code>), progressive chronological moving average (<code>MovingAverage</code>), and single-pass top reviewer identification (<code>TopReviewer</code>).</li>
+    <li>Provide cross-platform Python runners and deploy a public interactive dashboard via GitHub Pages.</li>
+  </ol>
+</div>
+
+<!-- ==================== PAGE 4: CHAPTER 2 & CHAPTER 3 ==================== -->
+<div class="page-break">
+  <h1>2. Literature Survey &amp; Framework Comparison</h1>
+  <p>
+    Within the Apache Hadoop ecosystem, multiple processing abstractions exist on top of HDFS and YARN. Selecting the appropriate tool depends on whether the workload is declarative SQL warehousing, procedural ETL dataflow, or stateful algorithmic processing.
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Evaluation Dimension</th>
+        <th>Apache Pig (Pig Latin)</th>
+        <th>Java MapReduce</th>
+        <th>Apache Hive (HiveQL)</th>
+        <th>Apache Spark</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Programming Paradigm</strong></td>
+        <td>Procedural Dataflow</td>
+        <td>Low-Level Imperative (Map/Reduce)</td>
+        <td>Declarative SQL-like</td>
+        <td>Functional In-Memory DAG</td>
+      </tr>
+      <tr>
+        <td><strong>Code Conciseness</strong></td>
+        <td>High (~10–25 lines per job)</td>
+        <td>Low (~50–150 lines per job)</td>
+        <td>High (~10–25 lines per query)</td>
+        <td>High (~15–30 lines)</td>
+      </tr>
+      <tr>
+        <td><strong>Schema Enforcement</strong></td>
+        <td>Schema-on-read (Optional)</td>
+        <td>Manual String Parsing</td>
+        <td>Schema-on-write (Metastore)</td>
+        <td>DataFrame Schema / Dynamic</td>
+      </tr>
+      <tr>
+        <td><strong>Execution Strategy</strong></td>
+        <td>Compiles to MR / Tez DAGs</td>
+        <td>Direct JVM MapReduce Tasks</td>
+        <td>Compiles to MR / Tez / Spark</td>
+        <td>In-Memory RDD Execution</td>
+      </tr>
+      <tr>
+        <td><strong>Ideal Role in Project</strong></td>
+        <td>Multi-step ETL, Grouping, Top-N</td>
+        <td>Stateful Moving Avg &amp; In-Reducer Max</td>
+        <td>Ad-hoc BI Table Reporting</td>
+        <td>Streaming / Heavy Iterative ML</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>Architectural Rationale:</strong> Apache Pig was selected as the primary processing engine because Pig Latin's <em>lazy evaluation</em> builds a logical DAG that automatically applies filter pushdown and projection pruning before launching MapReduce stages. Java MapReduce complements Pig where row-by-row sequential state accumulation (Moving Average) and global reducer-cleanup state tracking (Top Reviewer) are required.
+  </div>
+
+  <h1>3. System Architecture &amp; Dataflow Pipeline</h1>
+  <p>
+    The system adopts a dual-engine architecture reading from unified TSV storage (HDFS <code>/amazon/</code> in cluster mode or <code>data/</code> in local mode) and outputting standardized tab-delimited results.
+  </p>
+
+  <div class="diagram-box">
+    <svg width="100%" height="205" viewBox="0 0 680 260" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#475569"/>
+        </marker>
+      </defs>
+
+      <!-- Storage Box -->
+      <rect x="10" y="85" width="135" height="90" rx="8" fill="#f8fafc" stroke="#334155" stroke-width="2"/>
+      <text x="77" y="113" font-family="Segoe UI, Arial" font-size="10.5" font-weight="bold" fill="#0f172a" text-anchor="middle">Raw TSV Storage</text>
+      <text x="77" y="130" font-family="Segoe UI, Arial" font-size="8.5" fill="#475569" text-anchor="middle">HDFS / Local FS</text>
+      <text x="77" y="146" font-family="Consolas, monospace" font-size="8" fill="#ea580c" text-anchor="middle">15-Column Amazon</text>
+      <text x="77" y="160" font-family="Consolas, monospace" font-size="8" fill="#ea580c" text-anchor="middle">Reviews TSV (25+ rows)</text>
+
+      <!-- Arrows to Engines -->
+      <path d="M 145 110 L 188 68" stroke="#475569" stroke-width="1.8" marker-end="url(#arrowhead)"/>
+      <path d="M 145 150 L 188 192" stroke="#475569" stroke-width="1.8" marker-end="url(#arrowhead)"/>
+
+      <!-- Pig Box -->
+      <rect x="192" y="15" width="245" height="108" rx="8" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+      <text x="314" y="34" font-family="Segoe UI, Arial" font-size="10.5" font-weight="bold" fill="#9a3412" text-anchor="middle">Apache Pig Engine (amazon_pig_analysis.pig)</text>
+      <text x="204" y="52" font-family="Segoe UI, Arial" font-size="8.5" fill="#334155">1. FILTER non-null ratings &amp; strip TSV header</text>
+      <text x="204" y="67" font-family="Segoe UI, Arial" font-size="8.5" fill="#334155">2. GROUP BY product_parent &rarr; TOP(5) &amp; AVG Rating</text>
+      <text x="204" y="82" font-family="Segoe UI, Arial" font-size="8.5" fill="#334155">3. TOP(10) Most Helpful &amp; Most Interacted Franchises</text>
+      <text x="204" y="97" font-family="Segoe UI, Arial" font-size="8.5" fill="#b91c1c" font-weight="bold">4. Quality Alert (avg_rating &le; 2.5) &amp; Helpfulness Ratio</text>
+      <text x="204" y="112" font-family="Consolas, monospace" font-size="8" fill="#c2410c">Fallback: tools/pig_runner.py (part-r-00000)</text>
+
+      <!-- MapReduce Box -->
+      <rect x="192" y="138" width="245" height="106" rx="8" fill="#eff6ff" stroke="#1d4ed8" stroke-width="2"/>
+      <text x="314" y="157" font-family="Segoe UI, Arial" font-size="10.5" font-weight="bold" fill="#1e3a8a" text-anchor="middle">Hadoop Java MapReduce (mapreduce/src/)</text>
+      <text x="204" y="176" font-family="Segoe UI, Arial" font-size="8.5" fill="#334155">&bull; GameStats.java: MaxRate, HelpfulVotes, TotalVotes</text>
+      <text x="204" y="192" font-family="Segoe UI, Arial" font-size="8.5" fill="#334155">&bull; MovingAverage.java: Progressive Rating Sequence</text>
+      <text x="204" y="208" font-family="Segoe UI, Arial" font-size="8.5" fill="#334155">&bull; TopReviewer.java: In-Reducer cleanup() Max Tracker</text>
+      <text x="204" y="226" font-family="Consolas, monospace" font-size="8" fill="#1d4ed8">Fallback: tools/mapreduce_runner.py</text>
+
+      <!-- Arrows to Output -->
+      <path d="M 437 68 L 482 108" stroke="#475569" stroke-width="1.8" marker-end="url(#arrowhead)"/>
+      <path d="M 437 192 L 482 152" stroke="#475569" stroke-width="1.8" marker-end="url(#arrowhead)"/>
+
+      <!-- Output Box -->
+      <rect x="486" y="75" width="182" height="110" rx="8" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+      <text x="577" y="98" font-family="Segoe UI, Arial" font-size="10.5" font-weight="bold" fill="#065f46" text-anchor="middle">Outputs &amp; Web Demo</text>
+      <text x="498" y="118" font-family="Segoe UI, Arial" font-size="8.5" fill="#047857">&bull; output/*/part-r-00000</text>
+      <text x="498" y="134" font-family="Segoe UI, Arial" font-size="8.5" fill="#047857">&bull; outputs/*.txt (10 Reports)</text>
+      <text x="498" y="150" font-family="Segoe UI, Arial" font-size="8.5" fill="#047857">&bull; Interactive SPA Dashboard</text>
+      <text x="498" y="166" font-family="Consolas, monospace" font-size="7.8" fill="#065f46">GitHub Pages + Local Server</text>
+    </svg>
+    <div style="font-size:8.5pt; color:#64748b; margin-top:4px;">Figure 1: Hybrid Apache Pig &amp; Hadoop MapReduce Product Review Processing Architecture</div>
+  </div>
+</div>
+
+<!-- ==================== PAGE 5: CHAPTER 4 (REQUIREMENTS & DATASET SCHEMA) ==================== -->
+<div class="page-break">
+  <h1>4. Environment Specifications &amp; Dataset Schema</h1>
+
+  <h2>4.1 Hardware &amp; Software Specifications</h2>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width:28%;">Component</th>
+        <th>Specification / Version Used</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Operating System</strong></td><td>Windows 10/11 (Local Execution &amp; Web Hosting) / Ubuntu Linux (WSL2 or Hadoop Cluster)</td></tr>
+      <tr><td><strong>Big Data Storage &amp; Compute</strong></td><td>Apache Hadoop 3.x (HDFS, YARN, MapReduce), Apache Pig 0.17.x</td></tr>
+      <tr><td><strong>Programming Languages</strong></td><td>Pig Latin, Java (JDK 8/11 for MapReduce), Python 3.14.10 (Portable Runners &amp; HTTP Server)</td></tr>
+      <tr><td><strong>Web Presentation Layer</strong></td><td>HTML5, Tailwind CSS, FontAwesome 6, Chart.js (Single-Page Application)</td></tr>
+      <tr><td><strong>Version Control &amp; Hosting</strong></td><td>Git 2.56, GitHub Repository, GitHub Pages Static Hosting</td></tr>
+      <tr><td><strong>Hardware Baseline</strong></td><td>64-bit Multi-core CPU, Minimum 8 GB RAM, 20 GB Free Storage</td></tr>
+    </tbody>
+  </table>
+
+  <h2>4.2 Official 15-Column Amazon Customer Reviews Schema</h2>
+  <p>
+    The primary dataset (<code>data/amazon_reviews_us_Digital_Video_Games_v1_00.tsv</code>) follows the standard 15-column tab-separated schema from the Amazon US Customer Reviews specification, containing 25 verified sample records spanning 7 distinct video game and digital card franchises. In addition, an auxiliary 10-column multi-category dataset (<code>data/sample_reviews.tsv</code>, 40 records) is included for modular general e-commerce scripts.
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width:6%;">#</th>
+        <th style="width:22%;">Column Name</th>
+        <th style="width:14%;">Pig Type</th>
+        <th style="width:58%;">Description &amp; Sample Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td><code>marketplace</code></td><td><code>chararray</code></td><td>2-letter country code (e.g., <code>US</code>)</td></tr>
+      <tr><td>1</td><td><code>customer_id</code></td><td><code>chararray</code></td><td>Random customer identifier used by <code>TopReviewer</code> (e.g., <code>21925455</code>)</td></tr>
+      <tr><td>2</td><td><code>review_id</code></td><td><code>chararray</code></td><td>Unique review ID (e.g., <code>R14KYY7OE4RH2</code>)</td></tr>
+      <tr><td>3</td><td><code>product_id</code></td><td><code>chararray</code></td><td>Unique Amazon ASIN code (e.g., <code>B003LIT9FC</code>)</td></tr>
+      <tr><td>4</td><td><code>product_parent</code></td><td><code>chararray</code></td><td>Master franchise identifier aggregating variants (e.g., <code>395682204</code>)</td></tr>
+      <tr><td>5</td><td><code>product_title</code></td><td><code>chararray</code></td><td>Product name (e.g., <code>Minecraft Java &amp; Bedrock</code>)</td></tr>
+      <tr><td>6</td><td><code>product_category</code></td><td><code>chararray</code></td><td>Product category (<code>Digital_Video_Games</code>)</td></tr>
+      <tr><td>7</td><td><code>star_rating</code></td><td><code>float</code></td><td>Customer rating on a 1.0 to 5.0 scale</td></tr>
+      <tr><td>8</td><td><code>helpful_votes</code></td><td><code>int</code></td><td>Count of users marking the review helpful</td></tr>
+      <tr><td>9</td><td><code>total_votes</code></td><td><code>int</code></td><td>Total votes cast on the review</td></tr>
+      <tr><td>10</td><td><code>vine</code></td><td><code>chararray</code></td><td>Amazon Vine voice program flag (<code>Y</code> / <code>N</code>)</td></tr>
+      <tr><td>11</td><td><code>verified_purchase</code></td><td><code>chararray</code></td><td>Confirmed purchase flag (<code>Y</code> / <code>N</code>)</td></tr>
+      <tr><td>12</td><td><code>review_headline</code></td><td><code>chararray</code></td><td>Short review title (e.g., <code>Timeless Classic</code>)</td></tr>
+      <tr><td>13</td><td><code>review_body</code></td><td><code>chararray</code></td><td>Full text review body</td></tr>
+      <tr><td>14</td><td><code>review_date</code></td><td><code>chararray</code></td><td>Submission date in <code>YYYY-MM-DD</code> format</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ==================== PAGE 6: CHAPTER 5 (PIG LATIN IMPLEMENTATION) ==================== -->
+<div class="page-break">
+  <h1>5. Implementation: Apache Pig Latin Pipeline</h1>
+  <p>
+    The master Pig Latin script (<code>scripts/amazon_pig_analysis.pig</code>) executes seven analytical tasks in a unified DAG. Before storing results, <code>rmf</code> commands clear prior output directories to prevent Hadoop <code>FileAlreadyExistsException</code> errors.
+  </p>
+
+  <h2>5.1 Ingestion &amp; Data Hygiene</h2>
+<pre>raw_data = LOAD 'data/amazon_reviews_us_Digital_Video_Games_v1_00.tsv' USING PigStorage('\t') AS (
+    marketplace: chararray, customer_id: chararray, review_id: chararray,
+    product_id: chararray, product_parent: chararray, product_title: chararray,
+    product_category: chararray, star_rating: float, helpful_votes: int,
+    total_votes: int, vine: chararray, verified_purchase: chararray,
+    review_headline: chararray, review_body: chararray, review_date: chararray
+);
+
+clean_data = FILTER raw_data BY
+    (star_rating IS NOT NULL) AND (total_votes IS NOT NULL) AND (marketplace != 'marketplace');</pre>
+
+  <h2>5.2 Core Analytical Tasks (Tasks 1 to 7)</h2>
+  <ul>
+    <li><strong>Task 1 &ndash; Top 5 Franchises by Review Volume:</strong> Groups by <code>(product_parent, product_title)</code>, aggregates <code>COUNT(clean_data)</code>, and applies <code>FLATTEN(TOP(5, 2, parent_counts))</code>.</li>
+    <li><strong>Task 2 &ndash; Top 10 Rated Individual Reviews:</strong> Evaluates <code>TOP(10, 7, clean_data)</code> over column index 7 (<code>star_rating</code>).</li>
+    <li><strong>Task 3 &ndash; Top Rated Franchises (Average Rating):</strong> Computes <code>ROUND(AVG(clean_data.star_rating) * 100.0) / 100.0</code> and filters for statistical relevance (<code>review_count &ge; 2</code>).</li>
+    <li><strong>Task 4 &ndash; Top 10 Most Helpful Reviews:</strong> Extracts highest upvoted reviews via <code>TOP(10, 8, clean_data)</code> (column index 8: <code>helpful_votes</code>).</li>
+    <li><strong>Task 5 &ndash; Top 10 Most Interacted Franchises:</strong> Sums <code>total_votes</code> across each franchise to measure total community engagement.</li>
+    <li><strong>Task 6 &ndash; Quality Control Alert:</strong> Filters <code>avg_rate BY avg_rating &lt;= 2.5</code> and orders ascending to immediately surface buggy or poorly received products.</li>
+    <li><strong>Task 7 &ndash; Helpfulness Ratio &amp; Trust Index:</strong> Safely divides votes with a zero-division guard and retains high-trust reviews (<code>total_votes &ge; 20 AND helpfulness_ratio &ge; 0.85f</code>).</li>
+  </ul>
+
+<pre>-- Task 6 &amp; Task 7 Core Logic
+underperforming = FILTER avg_rate BY avg_rating &lt;= 2.5;
+sorted_underperforming = ORDER underperforming BY avg_rating ASC;
+
+reviews_with_helpfulness = FOREACH clean_data GENERATE
+    review_id, product_title, star_rating, helpful_votes, total_votes,
+    (total_votes &gt; 0 ? ROUND(((float)helpful_votes / (float)total_votes) * 100.0) / 100.0 : 0.0f)
+        AS helpfulness_ratio,
+    review_body;
+high_trust_reviews = FILTER reviews_with_helpfulness BY total_votes &gt;= 20 AND helpfulness_ratio &gt;= 0.85f;</pre>
+</div>
+
+<!-- ==================== PAGE 7: CHAPTER 6 (MAPREDUCE IMPLEMENTATION) ==================== -->
+<div class="page-break">
+  <h1>6. Implementation: Hadoop Java MapReduce Jobs</h1>
+  <p>
+    Three standalone Java MapReduce programs in <code>mapreduce/src/</code> complement Pig by executing specialized key-value aggregation and stateful sequential algorithms.
+  </p>
+
+  <h2>6.1 Job 1: <code>GameStats.java</code> (Multi-Metric Aggregation)</h2>
+  <p>
+    <strong>Design Pattern:</strong> Value Aggregation. <code>StatMapper</code> splits each non-header TSV line, emits <code>product_id</code> (index 3) as key and a packed string <code>star_rating,helpful_votes,total_votes</code> as value. <code>StatReducer</code> iterates through the packed values to compute <code>Math.max()</code> rating and cumulative vote totals.
+  </p>
+
+  <h2>6.2 Job 2: <code>MovingAverage.java</code> (Temporal Rating Progression)</h2>
+  <p>
+    <strong>Design Pattern:</strong> Stateful Sequential Aggregation. <code>AvgMapper</code> emits <code>(product_id, FloatWritable(star_rating))</code>. For each product group, <code>AvgReducer</code> maintains running <code>sum</code> and <code>count</code> accumulators, emitting a comma-separated sequence of progressive averages:
+    <code>MovingAvg_n = (1 / n) * Sum_{i=1..n}(rating_i)</code>. This reveals whether customer satisfaction improves or deteriorates as reviews accumulate.
+  </p>
+
+  <h2>6.3 Job 3: <code>TopReviewer.java</code> (In-Reducer Cleanup Pattern)</h2>
+  <p>
+    <strong>Design Pattern:</strong> In-Reducer State Tracking via <code>cleanup()</code>. Instead of emitting every customer's count to HDFS and requiring a second sorting job, <code>TopReviewerReducer</code> tracks <code>bestReviewer</code> and <code>maxReviews</code> in instance variables across all keys and performs a single <code>context.write()</code> inside <code>cleanup()</code>.
+  </p>
+
+<pre>public static class TopReviewerReducer extends Reducer&lt;Text, IntWritable, Text, IntWritable&gt; {
+    private String bestReviewer = "";
+    private int maxReviews = 0;
+
+    public void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) {
+        int sum = 0;
+        for (IntWritable val : values) { sum += val.get(); }
+        if (sum &gt; maxReviews) {
+            maxReviews = sum;
+            bestReviewer = key.toString();
+        }
+    }
+
+    protected void cleanup(Context context) throws IOException, InterruptedException {
+        context.write(new Text("Best Reviewer ID: " + bestReviewer), new IntWritable(maxReviews));
+    }
+}</pre>
+</div>
+
+<!-- ==================== PAGE 8: CHAPTER 7 (EXPERIMENTAL RESULTS & ANALYTICS) ==================== -->
+<div class="page-break">
+  <h1>7. Verified Experimental Results &amp; Insights</h1>
+  <p>
+    All Pig tasks and MapReduce jobs were executed and verified against the 25-record Amazon Digital Video Games dataset. Key aggregate KPIs and tabular outputs are summarized below.
+  </p>
+
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-val">25</div>
+      <div class="kpi-lbl">Sanitized Reviews</div>
+    </div>
+    <div class="kpi-card" style="border-top-color:#059669;">
+      <div class="kpi-val" style="color:#059669;">5.00 &#9733;</div>
+      <div class="kpi-lbl">Top Franchise (Minecraft)</div>
+    </div>
+    <div class="kpi-card" style="border-top-color:#dc2626;">
+      <div class="kpi-val" style="color:#dc2626;">2 Alerted</div>
+      <div class="kpi-lbl">Products &le; 2.5 &#9733;</div>
+    </div>
+    <div class="kpi-card" style="border-top-color:#ea580c;">
+      <div class="kpi-val" style="color:#c2410c;">21925455</div>
+      <div class="kpi-lbl">Top Reviewer (7 Revs)</div>
+    </div>
+  </div>
+
+  <h2>7.1 Apache Pig Franchise Rankings &amp; Engagement (Tasks 1, 3, 5, 6)</h2>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Parent ID</th>
+        <th>Product / Franchise Title</th>
+        <th>Reviews (Task 1)</th>
+        <th>Avg Rating (Task 3)</th>
+        <th>Total Votes (Task 5)</th>
+        <th>Quality Status (Task 6)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>395682204</code></td>
+        <td>Minecraft Java &amp; Bedrock</td>
+        <td>3</td>
+        <td><strong>5.00</strong></td>
+        <td>153</td>
+        <td style="color:#059669; font-weight:700;">Top Tier</td>
+      </tr>
+      <tr>
+        <td><code>341969535</code></td>
+        <td>Xbox Live Gift Card</td>
+        <td>4</td>
+        <td><strong>4.75</strong></td>
+        <td>74</td>
+        <td style="color:#059669; font-weight:700;">Top Tier</td>
+      </tr>
+      <tr>
+        <td><code>384246568</code></td>
+        <td>Playstation Network Card</td>
+        <td>4</td>
+        <td><strong>4.75</strong></td>
+        <td>97</td>
+        <td style="color:#059669; font-weight:700;">Top Tier</td>
+      </tr>
+      <tr>
+        <td><code>695277014</code></td>
+        <td>Civilization VI Digital Deluxe</td>
+        <td>3</td>
+        <td><strong>4.67</strong></td>
+        <td>95</td>
+        <td style="color:#059669; font-weight:700;">Top Tier</td>
+      </tr>
+      <tr>
+        <td><code>955209542</code></td>
+        <td>Grand Theft Auto V Online</td>
+        <td>3</td>
+        <td><strong>4.67</strong></td>
+        <td>88</td>
+        <td style="color:#059669; font-weight:700;">Top Tier</td>
+      </tr>
+      <tr>
+        <td><code>402222185</code></td>
+        <td>FIFA 24 Ultimate Edition</td>
+        <td>4</td>
+        <td><strong>2.50</strong></td>
+        <td>112</td>
+        <td style="color:#dc2626; font-weight:700;">FLAGGED (&le; 2.5)</td>
+      </tr>
+      <tr>
+        <td><code>232803743</code></td>
+        <td>Cyber Warrior RPG</td>
+        <td>4</td>
+        <td><strong>1.25</strong></td>
+        <td>169</td>
+        <td style="color:#dc2626; font-weight:700;">CRITICAL ALERT (&le; 2.5)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Inline SVG Horizontal Bar Chart of Average Ratings -->
+  <div class="diagram-box">
+    <svg width="100%" height="150" viewBox="0 0 640 185" xmlns="http://www.w3.org/2000/svg">
+      <text x="320" y="16" font-family="Segoe UI, Arial" font-size="10.5" font-weight="bold" fill="#0f172a" text-anchor="middle">Average Star Rating by Franchise (Out of 5.0)</text>
+      <!-- Grid lines -->
+      <line x1="210" y1="30" x2="210" y2="168" stroke="#94a3b8" stroke-width="1"/>
+      <line x1="290" y1="30" x2="290" y2="168" stroke="#e2e8f0" stroke-dasharray="3,3"/>
+      <line x1="370" y1="30" x2="370" y2="168" stroke="#e2e8f0" stroke-dasharray="3,3"/>
+      <line x1="450" y1="30" x2="450" y2="168" stroke="#e2e8f0" stroke-dasharray="3,3"/>
+      <line x1="530" y1="30" x2="530" y2="168" stroke="#e2e8f0" stroke-dasharray="3,3"/>
+      <line x1="610" y1="30" x2="610" y2="168" stroke="#e2e8f0" stroke-dasharray="3,3"/>
+      <!-- Scale labels (400px = 5.0 -> 80px per star) -->
+      <text x="210" y="180" font-size="8.5" fill="#64748b" text-anchor="middle">0.0</text>
+      <text x="290" y="180" font-size="8.5" fill="#64748b" text-anchor="middle">1.0</text>
+      <text x="370" y="180" font-size="8.5" fill="#64748b" text-anchor="middle">2.0</text>
+      <text x="450" y="180" font-size="8.5" fill="#64748b" text-anchor="middle">3.0</text>
+      <text x="530" y="180" font-size="8.5" fill="#64748b" text-anchor="middle">4.0</text>
+      <text x="610" y="180" font-size="8.5" fill="#64748b" text-anchor="middle">5.0</text>
+
+      <!-- Bars -->
+      <text x="204" y="43" font-size="8.5" fill="#1e293b" text-anchor="end">Minecraft Java &amp; Bedrock</text>
+      <rect x="210" y="33" width="400" height="13" rx="2" fill="#10b981"/>
+      <text x="615" y="43" font-size="8.5" font-weight="bold" fill="#065f46">5.00</text>
+
+      <text x="204" y="62" font-size="8.5" fill="#1e293b" text-anchor="end">Xbox Live Gift Card</text>
+      <rect x="210" y="52" width="380" height="13" rx="2" fill="#10b981"/>
+      <text x="595" y="62" font-size="8.5" font-weight="bold" fill="#065f46">4.75</text>
+
+      <text x="204" y="81" font-size="8.5" fill="#1e293b" text-anchor="end">Playstation Network Card</text>
+      <rect x="210" y="71" width="380" height="13" rx="2" fill="#10b981"/>
+      <text x="595" y="81" font-size="8.5" font-weight="bold" fill="#065f46">4.75</text>
+
+      <text x="204" y="100" font-size="8.5" fill="#1e293b" text-anchor="end">Civilization VI Deluxe</text>
+      <rect x="210" y="90" width="373.6" height="13" rx="2" fill="#0ea5e9"/>
+      <text x="588.6" y="100" font-size="8.5" font-weight="bold" fill="#0369a1">4.67</text>
+
+      <text x="204" y="119" font-size="8.5" fill="#1e293b" text-anchor="end">Grand Theft Auto V Online</text>
+      <rect x="210" y="109" width="373.6" height="13" rx="2" fill="#0ea5e9"/>
+      <text x="588.6" y="119" font-size="8.5" font-weight="bold" fill="#0369a1">4.67</text>
+
+      <text x="204" y="138" font-size="8.5" fill="#991b1b" font-weight="bold" text-anchor="end">FIFA 24 Ultimate Edition</text>
+      <rect x="210" y="128" width="200" height="13" rx="2" fill="#f97316"/>
+      <text x="415" y="138" font-size="8.5" font-weight="bold" fill="#c2410c">2.50</text>
+
+      <text x="204" y="157" font-size="8.5" fill="#991b1b" font-weight="bold" text-anchor="end">Cyber Warrior RPG</text>
+      <rect x="210" y="147" width="100" height="13" rx="2" fill="#ef4444"/>
+      <text x="315" y="157" font-size="8.5" font-weight="bold" fill="#b91c1c">1.25</text>
+    </svg>
+  </div>
+
+  <div class="callout-alert">
+    <strong>Key Analytical Finding:</strong> Notice that <em>Cyber Warrior RPG</em> had the highest total vote interaction across the entire dataset (<strong>169 total votes</strong>), despite holding the worst rating (<strong>1.25&#9733;</strong>). High community interaction paired with low star ratings strongly correlates with severe post-launch defects (crashes, corrupt saves) validated by 55/60 helpful votes on review <code>R11HVV4LE7OE9</code>.
+  </div>
+</div>
+
+<!-- ==================== PAGE 9: CHAPTER 7.2 (MAPREDUCE RESULTS) & CHAPTER 8 ==================== -->
+<div class="page-break">
+  <h2>7.2 Verified Hadoop MapReduce Outputs (Jobs 1, 2, 3)</h2>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Product ID (ASIN)</th>
+        <th>Max Rating (<code>GameStats</code>)</th>
+        <th>Helpful / Total Votes</th>
+        <th>Sequential Moving Average (<code>MovingAverage</code>)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><code>B001KC01WO</code></td><td>5.0</td><td>81 / 88</td><td><code>5.0, 4.5, 4.67</code></td></tr>
+      <tr><td><code>B002LIT9EC</code></td><td>5.0</td><td>88 / 95</td><td><code>5.0, 5.0, 4.67</code></td></tr>
+      <tr><td><code>B003LIT9FC</code></td><td>5.0</td><td>146 / 153</td><td><code>5.0, 5.0, 5.0</code></td></tr>
+      <tr><td><code>B004RMK4BC</code></td><td>5.0</td><td>90 / 97</td><td><code>5.0, 4.5, 4.67, 4.75</code></td></tr>
+      <tr><td><code>B008139R8A</code></td><td>3.0</td><td>94 / 112</td><td><code>3.0, 2.5, 2.33, 2.5</code></td></tr>
+      <tr><td><code>B009140S9B</code></td><td>2.0</td><td>155 / 169</td><td><code>1.0, 1.0, 1.33, 1.25</code></td></tr>
+      <tr><td><code>B00F4CEHNK</code></td><td>5.0</td><td>70 / 74</td><td><code>5.0, 5.0, 5.0, 4.75</code></td></tr>
+    </tbody>
+  </table>
+  <p>
+    <strong>TopReviewer Output (<code>TopReviewer_Output.txt</code>):</strong> <code>Best Reviewer ID: 21925455</code> with <strong>7 verified reviews</strong> published across multiple titles.
+  </p>
+
+  <h2>7.3 High-Impact Review Helpfulness Mining (Pig Task 7)</h2>
+  <p>
+    Task 7 isolated <strong>16 high-trust reviews</strong> meeting <code>total_votes &ge; 20</code> and <code>helpfulness_ratio &ge; 0.85</code>. Top examples include:
+  </p>
+  <ul>
+    <li><code>R14KYY7OE4RH2</code> (<em>Minecraft Java &amp; Bedrock</em>, 5.0&#9733;): 65/68 votes &rarr; <strong>0.96 ratio</strong>.</li>
+    <li><code>R19PDD2TE9WM7</code> (<em>Xbox Live Gift Card</em>, 5.0&#9733;): 27/28 votes &rarr; <strong>0.96 ratio</strong>.</li>
+    <li><code>R12IWW5ME6PF0</code> (<em>Cyber Warrior RPG</em>, 1.0&#9733;): 38/40 votes &rarr; <strong>0.95 ratio</strong> ("Refund requested immediately").</li>
+  </ul>
+
+  <h1>8. Execution Guide &amp; Cross-Platform Deployment</h1>
+  <h2>8.1 Distributed Hadoop / WSL Cluster Mode</h2>
+<pre># 1. Ingest dataset into HDFS
+hdfs dfs -mkdir -p /amazon/
+hdfs dfs -put -f data/amazon_reviews_us_Digital_Video_Games_v1_00.tsv /amazon/
+
+# 2. Execute Apache Pig pipeline
+pig -x local scripts/amazon_pig_analysis.pig
+
+# 3. Compile and execute Java MapReduce JAR
+cd mapreduce &amp;&amp; bash execution.bash</pre>
+
+  <h2>8.2 Portable Execution &amp; Live Web Dashboard (Windows / Non-Hadoop Systems)</h2>
+<pre># Run Apache Pig &amp; MapReduce Python runners
+python tools\pig_runner.py
+python tools\mapreduce_runner.py
+
+# Start interactive local dashboard (automatic port fallback on 8000/5000/etc.)
+python tools\serve_dashboard.py</pre>
+  <p>
+    Additionally, the repository is deployed via <strong>GitHub Pages</strong> as a serverless Single-Page Application (<code>index.html</code>) using Tailwind CSS and Chart.js at <code>https://divakarnaik0079.github.io/product-review-pig/</code>.
+  </p>
+</div>
+
+<!-- ==================== PAGE 10: CHAPTER 9 (CONCLUSION, FUTURE WORK & REFERENCES) ==================== -->
+<div class="page-break">
+  <h1>9. Conclusion, Future Enhancements &amp; References</h1>
+
+  <h2>9.1 Conclusion</h2>
+  <p>
+    This project successfully demonstrates how <strong>Apache Pig</strong> and <strong>Hadoop MapReduce</strong> work together to extract actionable commercial intelligence from semi-structured Amazon product review logs. Pig Latin reduced multi-stage grouping, top-N selection, and ratio calculation into a clean, maintainable pipeline, while custom Java MapReduce jobs delivered fine-grained state-tracking analytics including chronological moving averages and single-pass top reviewer identification.
+  </p>
+  <p>
+    By validating every transformation across standard <code>part-r-00000</code> outputs, packaging cross-platform Python runners, and deploying a live GitHub Pages dashboard, the solution bridges distributed Big Data engineering with accessible stakeholder reporting.
+  </p>
+
+  <h2>9.2 Future Enhancements</h2>
+  <ol>
+    <li><strong>NLP Sentiment Polarity UDF:</strong> Develop a Python or Java User Defined Function (UDF) integrating VADER or transformer-based sentiment classification to score free-text sarcasm where star ratings and text disagree.</li>
+    <li><strong>Real-Time Streaming Ingestion:</strong> Replace batch TSV ingestion with Apache Kafka and Apache Spark Structured Streaming to trigger real-time defect alerts within seconds of negative review spikes.</li>
+    <li><strong>Bot &amp; Spam Review Filtering:</strong> Train an MLlib classification model combining <code>verified_purchase</code>, review frequency per customer, and text similarity to automatically quarantine coordinated review manipulation.</li>
+    <li><strong>Data Skewness Mitigation:</strong> For multi-terabyte production datasets where viral products create reducer hot-spots, introduce key salting in MapReduce and Pig's <code>PARALLEL</code> / skewed-join directives.</li>
+  </ol>
+
+  <h2>9.3 References</h2>
+  <ol>
+    <li>Gates, A., Natkovich, O., Chopra, S., Kamath, P., Narayanamurthy, S., Olston, C., Reed, B., Srinivasan, S., &amp; Srivastava, U. (2009). <em>Building a High-Level Dataflow System on Top of MapReduce: The Pig Experience</em>. Proceedings of the VLDB Endowment, 2(2), 1414–1425.</li>
+    <li>Olston, C., Reed, B., Srivastava, U., Kumar, R., &amp; Tomkins, A. (2008). <em>Pig Latin: A Not-So-Foreign Language for Data Processing</em>. ACM SIGMOD International Conference on Management of Data, 1099–1110.</li>
+    <li>White, T. (2015). <em>Hadoop: The Definitive Guide</em> (4th ed.). O'Reilly Media.</li>
+    <li>Apache Software Foundation. <em>Apache Pig 0.17.0 Documentation &amp; Built-in UDF Reference</em>. https://pig.apache.org/</li>
+    <li>Rempel, C. (2018). <em>Amazon US Customer Reviews Dataset</em>. Kaggle / AWS Open Data Program.</li>
+    <li>Project Repository &amp; Live Deployment: <code>https://github.com/DivakarNaik0079/product-review-pig</code></li>
+  </ol>
+</div>
+
+</body>
+</html>
